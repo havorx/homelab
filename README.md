@@ -66,25 +66,44 @@ Infrastructure as code for a Proxmox home server.
 homelab/
 ├── README.md
 ├── .gitignore
-├── proxmox/           # Host-level configs
+├── proxmox/                    # Host-level configs
 │   ├── post-install.sh
-│   └── lxc-create.sh
-├── lxc/               # LXC service configs
+│   ├── lxc-create.sh           # Generic LXC installer (auto-discovers services)
+│   └── lxc-services/           # Drop .conf files to add/remove services
+│       ├── lxc-shared.conf     # Shared defaults (template, storage, bridge)
+│       ├── adguard.conf
+│       ├── gatus.conf
+│       └── tailscale.conf
+├── lxc/                        # Running configs (from live LXCs)
 │   ├── adguard/
 │   │   └── AdGuardHome.yaml
 │   ├── gatus/
 │   │   └── config.yaml
 │   └── tailscale/
 │       └── setup.sh
-├── vm/                # VM services (Docker Compose)
+├── vm/                         # VM services (Docker Compose)
 │   └── docker/
 │       ├── caddy/
 │       │   └── Caddyfile
 │       ├── vaultwarden/
 │       └── ...
-├── scripts/           # Operational utilities
-└── docs/              # Architecture decisions
+├── scripts/                    # Operational utilities
+└── docs/                       # Architecture decisions
     └── decisions.md
+```
+
+### Adding a new LXC service
+
+1. Drop a `.conf` file in `proxmox/lxc-services/` (e.g., `nextcloud.conf`)
+2. `lxc-create.sh` auto-discovers it on next run
+3. No script changes needed
+
+### Usage
+
+```bash
+bash proxmox/lxc-create.sh              # Interactive menu or batch all
+bash proxmox/lxc-create.sh adguard      # Install specific services
+bash proxmox/lxc-create.sh --list       # Show available services
 ```
 
 ## Key Decisions
