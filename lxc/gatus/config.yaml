@@ -1,0 +1,19 @@
+endpoints:
+  - name: AdGuard DNS
+    group: infrastructure
+    url: tcp://192.168.1.10:53
+    interval: 60s
+    conditions:
+      - '[CONNECTED] == true'
+  - name: Proxmox
+    group: infrastructure
+    url: https://192.168.1.252:8006
+    interval: 120s
+    conditions:
+      - '[STATUS] == 200'
+  - name: Internet
+    group: external
+    url: https://1.1.1.1
+    interval: 120s
+    conditions:
+      - '[STATUS] == 200'
