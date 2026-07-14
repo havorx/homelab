@@ -9,6 +9,8 @@ endpoints:
     group: infrastructure
     url: https://192.168.1.252:8006
     interval: 120s
+    client:
+      insecure: true
     conditions:
       - '[STATUS] == 200'
   - name: Internet
