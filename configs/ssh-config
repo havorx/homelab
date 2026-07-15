@@ -1,0 +1,21 @@
+Host pve
+    HostName pve.home
+    User root
+
+Host monitor
+    HostName 10.0.0.101
+    User root
+    ProxyJump pve
+
+Host tailscale
+    HostName 10.0.0.103
+    User root
+    ProxyJump pve
+
+Host dns
+    HostName adguard.home
+    User root
+
+Host caddy
+    HostName caddy.home
+    User root
