@@ -1,0 +1,24 @@
+{
+    auto_https disable_redirects
+}
+
+http://gatus.home, http://192.168.1.254 {
+    reverse_proxy 10.0.0.101:8080
+}
+
+http://adguard.home {
+    reverse_proxy 192.168.1.10:80
+}
+
+http://proxmox.home {
+    reverse_proxy 192.168.1.252:8006 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+https://192.168.1.254 {
+    tls internal
+    reverse_proxy 10.0.0.101:8080
+}

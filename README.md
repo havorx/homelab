@@ -1,6 +1,6 @@
 # Homelab
 
-Infrastructure as code for a Proxmox home server.
+Infrastructure as code for a Proxmox VE 9.x home server on an ASUS GL552JX laptop.
 
 ## Hardware
 
@@ -13,116 +13,115 @@ Infrastructure as code for a Proxmox home server.
 
 ## Network
 
-| Host | IP | Purpose |
-|------|----|---------|
-| gl552jx (Proxmox host) | 192.168.1.252 | Hypervisor, Web UI :8006 |
-| dns (LXC) | 192.168.1.10 | AdGuard Home — DNS filtering + ad blocking |
-| monitor (LXC) | 192.168.1.12 | Gatus — uptime monitoring (:8080) |
-| tailscale (LXC) | DHCP | Tailscale subnet router (192.168.1.0/24) |
-| docker-host (VM) | DHCP | Debian 13 — Docker + Caddy + services |
+| Host | IP (LAN) | IP (svcnet) | Purpose |
+|------|----------|-------------|---------|
+| gl552jx (Proxmox host) | 192.168.1.252 | 10.0.0.1 (gateway) | Hypervisor, Web UI :8006 |
+| dns (LXC 101) | 192.168.1.10 | 10.0.0.10 | AdGuard Home — DNS filtering + ad blocking |
+| monitor (LXC 102) | — | DHCP (10.0.0.101) | Gatus — uptime monitoring |
+| caddy (LXC 103) | 192.168.1.254 | DHCP (10.0.0.102) | Reverse proxy — HTTP :80 + HTTPS :443 (internal cert) |
+| tailscale (LXC 104) | — | DHCP (10.0.0.103) | Tailscale subnet router |
+| docker-host (VM 100) | — | DHCP | Debian 13 — Docker services (planned) |
 
 - **Gateway:** 192.168.1.1 (VNPT iGate GW020-H)
-- **Domain:** home.arpa
+- **SDN svcnet:** 10.0.0.0/24, SNAT, gateway 10.0.0.1, DHCP pool 10.0.0.100-200
+- **Domain:** `.home` (not `.home.arpa` — Android Tailscale DNS bug)
 - **DNS:** All devices use AdGuard Home at 192.168.1.10
+- **Tailscale IP:** `100.67.156.34` (stable — persists across reboots)
+
+## DNS Architecture
+
+```
+Remote Client (Tailscale) → split DNS "home" → 192.168.1.10 (AdGuard) → LAN services
+LAN Client               → router DHCP DNS → 192.168.1.10 (AdGuard) → LAN services
+```
+
+**AdGuard DNS rewrites:** `adguard.home → 192.168.1.10`, `proxmox.home → 192.168.1.252`, `*.home → 192.168.1.254`
+
+**Caddy routes:**
+- `http://gatus.home/` and `http://192.168.1.254/` → Gatus dashboard
+- `http://adguard.home/` → AdGuard web UI
+- `http://proxmox.home/` → Proxmox web UI
+- `https://192.168.1.254/` → Gatus dashboard (TLS internal cert, for Android Chrome)
+
+**Tailscale subnet router** (LXC 104, `100.67.156.34`) advertises: `10.0.0.0/24`, `192.168.1.10/32`, `192.168.1.254/32`
 
 ## Services
 
-### Infrastructure (activated)
-- **AdGuard Home** — Network-wide DNS ad blocking, DNS rewrites for `*.home.arpa`
-- **Gatus** — Uptime monitoring with web dashboard
-- **Tailscale** — VPN mesh + subnet router for remote access
-
-### Docker services (planned)
-- **Caddy** — Reverse proxy (HTTPS, `*.home.local`)
-- **Beszel** — Resource monitoring (historical CPU/RAM/disk)
-- **Vaultwarden** — Password manager
-- **Jellyfin** — Media streaming (direct-play only)
-- **Immich** — Photo management (ML disabled)
-- **Paperless-ngx** — Document management (OCR scheduled)
-- **SearXNG** — Private search engine
-- **qBittorrent + Gluetun** — Media acquisition via VPN
-
-## Quick Start
-
-1. **Install Proxmox VE 9.x** on the laptop
-2. **Run post-install config:** `bash proxmox/post-install.sh`
-   - Disables lid-close suspend, screen blanking
-   - Sets CPU governor to schedutil
-   - Configures TLP + thermald for power/thermal management
-   - Binds dGPU to vfio-pci for deep sleep
-3. **Create LXCs:** `bash proxmox/lxc-create.sh`
-   - AdGuard: 256 MB RAM, 2 GB disk
-   - Gatus: 128 MB RAM, 2 GB disk
-   - Tailscale: 128 MB RAM, 2 GB disk, nesting enabled
-4. **Configure AdGuard** via web UI at `http://192.168.1.10:3000`
-   - Reference blocklists and upstream DNS in `lxc/adguard/AdGuardHome.yaml`
-5. **Configure Gatus** — config at `lxc/gatus/config.yaml`
-   - Dashboard at `http://192.168.1.12:8080`
-6. **Create Docker VM** and deploy services (see `vm/docker/`)
+| Service | Status | Access |
+|---------|--------|--------|
+| AdGuard Home | ✅ Running | `http://adguard.home/`, `http://192.168.1.10/` |
+| Gatus | ✅ Running | `http://gatus.home/`, `http://192.168.1.254/` |
+| Tailscale | ✅ Running | Subnet router, split DNS |
+| Caddy | ✅ Running | Reverse proxy on 192.168.1.254 |
+| Docker | ⏳ Planned | VM 100, docker-ce from official repo |
 
 ## Directory Structure
 
 ```
 homelab/
 ├── README.md
-├── .gitignore
-├── proxmox/                    # Host-level configs
-│   ├── post-install.sh
-│   ├── lxc-create.sh           # Generic LXC installer (auto-discovers services)
-│   └── lxc-services/           # Drop .conf files to add/remove services
-│       ├── lxc-shared.conf     # Shared defaults (template, storage, bridge)
-│       ├── adguard.conf
-│       ├── gatus.conf
-│       └── tailscale.conf
-├── lxc/                        # Running configs (from live LXCs)
+├── proxmox/
+│   ├── post-install.sh              # Host post-install (lid close, CPU gov, dGPU, etc.)
+│   ├── lxc-create.sh                # Data-driven LXC installer
+│   ├── lxc-services/                # Drop .conf files to add/remove LXC services
+│   │   ├── lxc-shared.conf           # Shared defaults (template, storage, bridge)
+│   │   ├── adguard.conf
+│   │   ├── gatus.conf
+│   │   ├── caddy.conf
+│   │   └── tailscale.conf
+│   ├── lxc-configs/                 # Current LXC network configs (live)
+│   │   ├── dns.conf
+│   │   ├── monitor.conf
+│   │   ├── caddy.conf
+│   │   └── tailscale.conf
+│   └── sdn/                         # SDN configuration
+│       ├── zones.cfg
+│       ├── vnets.cfg
+│       ├── subnets.cfg
+│       └── ethers                    # DHCP MAC→IP mappings
+├── lxc/                             # Running service configs
 │   ├── adguard/
-│   │   └── AdGuardHome.yaml
+│   │   └── AdGuardHome.yaml          # DNS rewrites, blocklists, upstreams
 │   ├── gatus/
-│   │   └── config.yaml
+│   │   └── config.yaml               # Uptime monitoring endpoints
+│   ├── caddy/
+│   │   └── Caddyfile                 # Reverse proxy configuration
 │   └── tailscale/
-│       └── setup.sh
-├── vm/                         # VM services (Docker Compose)
-│   └── docker/
-│       ├── caddy/
-│       │   └── Caddyfile
-│       ├── vaultwarden/
-│       └── ...
-├── scripts/                    # Operational utilities
-└── docs/                       # Architecture decisions
-    └── decisions.md
+│       └── routes.env               # Advertised routes + Tailscale IP
+├── vm/
+│   └── docker/                       # Docker services (planned)
+├── scripts/
+└── docs/
 ```
 
-### Adding a new LXC service
+## Quick Start
 
-1. Drop a `.conf` file in `proxmox/lxc-services/` (e.g., `nextcloud.conf`)
-2. `lxc-create.sh` auto-discovers it on next run
-3. No script changes needed
+1. Install Proxmox VE 9.x
+2. Run `bash proxmox/post-install.sh`
+3. Create SDN: apply `proxmox/sdn/` configs
+4. Create LXCs: `bash proxmox/lxc-create.sh`
+5. Install per-LXC service configs from `lxc/<service>/`
+6. Configure Tailscale: `tailscale up --advertise-routes=...` (see `lxc/tailscale/routes.env`)
+7. Set up Tailscale admin: split DNS `home → 192.168.1.10`, approve routes
 
-### Usage
+## Adding a new service
 
-```bash
-bash proxmox/lxc-create.sh              # Interactive menu or batch all
-bash proxmox/lxc-create.sh adguard      # Install specific services
-bash proxmox/lxc-create.sh --list       # Show available services
-```
+1. Drop a `.conf` file in `proxmox/lxc-services/`
+2. Add Caddy reverse proxy block in `lxc/caddy/Caddyfile`
+3. Add DNS rewrite in `lxc/adguard/AdGuardHome.yaml` (if needed)
+4. Re-run `proxmox/lxc-create.sh <service>`
+5. Commit all configs
 
 ## Key Decisions
 
 | Decision | Choice | Why |
 |----------|--------|-----|
-| Reverse proxy | Caddy (not NPM) | Lighter, auto-HTTPS, single binary |
-| CPU governor | schedutil (GRUB kernel param) | Community preference, persists at boot |
+| Reverse proxy | Caddy (own LXC) | Lighter than NPM, survives Docker VM reboots |
+| Domain TLD | `.home` | Avoids `.home.arpa` Android Tailscale bug |
+| HTTPS on Caddy | `tls internal` + `auto_https disable_redirects` | Internal cert for HSTS compatibility, no redirects |
+| SDN | Simple Zone + SNAT | VLAN-free isolated homelab subnet |
+| SDN DHCP | dnsmasq with MAC→IP pre-reservations | Stable IPs without static config on each host |
+| CPU governor | schedutil (GRUB kernel param) | Community preference |
 | dGPU | vfio-pci bind (D3cold) | Deeper power saving than blacklist alone |
-| Monitoring | Gatus (uptime) + Beszel (resources) | Lighter than Prometheus/Grafana |
-| Docker install | docker-ce (official repo) | Not Debian's docker.io package |
-| LXC swap | 0 | Community consensus — predictable RAM usage |
-| LXC OS | Debian 13 | Matches Proxmox host base OS |
-| DNS blocklists | ABPVN + hostsVN + HaGeZi Pro++ | Vietnamese + international coverage |
-
-## References
-
-- [Proxmox Helper Scripts](https://community-scripts.org/) — Community-maintained LXC/VM templates
-- [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) — Network-wide ad blocking
-- [Gatus](https://github.com/TwiN/gatus) — Developer-oriented health dashboard
-- [Tailscale](https://tailscale.com/kb/1019/subnets) — Subnet router documentation
-- [HaGeZi DNS Blocklists](https://github.com/hagezi/dns-blocklists) — Curated blocklists
+| LXC swap | 0 | Predictable RAM usage, community consensus |
+| Stateful filtering | Off by default (v1.98.8+) | Not needed for DNAT or subnet router |

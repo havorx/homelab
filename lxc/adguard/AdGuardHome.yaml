@@ -169,7 +169,16 @@ filtering:
   blocking_mode: default
   parental_block_host: family-block.dns.adguard.com
   safebrowsing_block_host: standard-block.dns.adguard.com
-  rewrites: []
+  rewrites:
+    - domain: adguard.home
+      answer: 192.168.1.10
+      enabled: true
+    - domain: proxmox.home
+      answer: 192.168.1.252
+      enabled: true
+    - domain: '*.home'
+      answer: 192.168.1.254
+      enabled: true
   safe_fs_patterns: []
   safebrowsing_cache_size: 1048576
   safesearch_cache_size: 1048576
