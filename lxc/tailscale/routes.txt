@@ -1,0 +1,17 @@
+# Tailscale subnet router: LXC 104 (100.67.156.34)
+#
+# Advertise routes: svcnet only (10.0.0.0/24)
+# 192.168.1.x routes removed — causes same-LAN routing conflict (Section 25)
+#
+# Remote clients resolve .home via Tailscale split DNS → dnsmasq on LXC 104
+# dnsmasq returns 100.67.156.34 for all *.home queries
+# P2P WireGuard to LXC 104 → iptables DNAT → Caddy → route by Host header
+#
+# Direct P2P: vmbr0 eth1 preferred over svcnet (avoids SDN SNAT, see Section 30)
+# Default route: eth1 (vmbr0, 192.168.1.12) → VNPT router
+# Fallback:  eth0 (svcnet, 10.0.0.103) metric 100
+# Script: /etc/network/if-up.d/tailscale-routes
+
+ADVERTISED_ROUTES="10.0.0.0/24"
+TAILSCALE_IP="100.67.156.34"
+SPLIT_DNS_NAMESERVER="100.67.156.34"  # dnsmasq on LXC 104 — correct per Tailscale docs
