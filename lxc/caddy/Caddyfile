@@ -14,6 +14,10 @@ http://proxmox.home {
     redir https://proxmox.home{uri} 302
 }
 
+http://100.67.156.34 {
+    reverse_proxy 10.0.0.101:8080
+}
+
 https://proxmox.home {
     tls internal
     reverse_proxy https://192.168.1.252:8006 {
@@ -36,4 +40,18 @@ https://adguard.home {
 https://192.168.1.254 {
     tls internal
     reverse_proxy 10.0.0.101:8080
+}
+
+https://100.67.156.34 {
+    tls internal
+    reverse_proxy 10.0.0.101:8080
+}
+
+https://100.67.156.34:8006 {
+    tls internal
+    reverse_proxy https://192.168.1.252:8006 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
 }
