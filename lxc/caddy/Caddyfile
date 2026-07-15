@@ -23,6 +23,16 @@ https://proxmox.home {
     }
 }
 
+https://gatus.home {
+    tls internal
+    reverse_proxy 10.0.0.101:8080
+}
+
+https://adguard.home {
+    tls internal
+    reverse_proxy 192.168.1.10:80
+}
+
 https://192.168.1.254 {
     tls internal
     reverse_proxy 10.0.0.101:8080
