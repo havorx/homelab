@@ -11,10 +11,11 @@ http://adguard.home {
 }
 
 http://proxmox.home {
-    reverse_proxy 192.168.1.252:8006 {
+    reverse_proxy https://192.168.1.252:8006 {
         transport http {
             tls_insecure_skip_verify
         }
+        header_up Host 192.168.1.252:8006
     }
 }
 
