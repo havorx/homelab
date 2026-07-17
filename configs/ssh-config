@@ -1,5 +1,5 @@
 Host pve
-    HostName pve.home
+    HostName 192.168.1.252
     User root
 
 Host monitor
@@ -19,3 +19,8 @@ Host dns
 Host caddy
     HostName caddy.home
     User root
+
+Host docker-host
+    HostName 10.0.0.9
+    User root
+    ProxyJump pve
