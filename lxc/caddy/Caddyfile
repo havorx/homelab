@@ -1,21 +1,21 @@
-{
-    auto_https disable_redirects
-}
-
-http://gatus.home, http://192.168.1.254 {
-    reverse_proxy 10.0.0.101:8080
+http://gatus.home {
+    redir https://gatus.home{uri} 302
 }
 
 http://adguard.home {
-    reverse_proxy 192.168.1.10:80
+    redir https://adguard.home{uri} 302
 }
 
 http://proxmox.home {
     redir https://proxmox.home{uri} 302
 }
 
+http://192.168.1.254 {
+    redir https://192.168.1.254{uri} 302
+}
+
 http://100.67.156.34 {
-    reverse_proxy 10.0.0.101:8080
+    redir https://100.67.156.34{uri} 302
 }
 
 https://proxmox.home {
@@ -54,4 +54,18 @@ https://100.67.156.34:8006 {
             tls_insecure_skip_verify
         }
     }
+}
+
+http://opencode.home {
+    reverse_proxy 10.0.0.9:4096
+}
+
+https://opencode.home {
+    tls internal
+    reverse_proxy 10.0.0.9:4096
+}
+
+https://100.67.156.34:4096 {
+    tls internal
+    reverse_proxy 10.0.0.9:4096
 }

@@ -1,0 +1,23 @@
+services:
+  opencode:
+    image: ghcr.io/anomalyco/opencode:1.18.3
+    container_name: opencode
+    restart: unless-stopped
+    command: ["serve", "--hostname", "0.0.0.0", "--port", "4096"]
+    ports:
+      - "4096:4096"
+    volumes:
+      - /root/homelab:/workspace
+      - opencode-data:/root/.local/share/opencode
+    working_dir: /workspace
+    environment:
+      - OPENCODE_SERVER_PASSWORD=${OPENCODE_SERVER_PASSWORD:-}
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4096/global/health',r=>process.exit(r.statusCode===200?0:1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  opencode-data:
