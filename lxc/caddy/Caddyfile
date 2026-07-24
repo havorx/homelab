@@ -71,15 +71,23 @@ https://100.67.156.34:4096 {
 }
 
 http://stremio.home {
-    reverse_proxy 10.0.0.9:11470
+    redir https://stremio.home{uri} 302
 }
 
 https://stremio.home {
     tls internal
-    reverse_proxy 10.0.0.9:11470
+    reverse_proxy https://10.0.0.9:12470 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
 }
 
 https://100.67.156.34:11470 {
     tls internal
-    reverse_proxy 10.0.0.9:11470
+    reverse_proxy https://10.0.0.9:12470 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
 }
