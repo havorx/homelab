@@ -1,0 +1,12 @@
+[Unit]
+Description=DHCP Client
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/dhclient ens18
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
