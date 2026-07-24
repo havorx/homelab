@@ -100,3 +100,12 @@ https://memory.home {
     tls internal
     reverse_proxy 10.0.0.9:3111
 }
+
+http://syncthing.home {
+    redir https://syncthing.home{uri} 302
+}
+
+https://syncthing.home {
+    tls internal
+    reverse_proxy 10.0.0.104:8384
+}

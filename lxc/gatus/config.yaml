@@ -45,3 +45,10 @@ endpoints:
     conditions:
       - '[STATUS] == 200'
       - '[BODY].status == ok'
+
+  - name: Syncthing
+    group: infrastructure
+    url: http://10.0.0.104:8384/
+    interval: 60s
+    conditions:
+      - '[STATUS] == 200'
