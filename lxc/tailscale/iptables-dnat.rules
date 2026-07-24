@@ -1,0 +1,5 @@
+-A PREROUTING -i tailscale0 -p tcp -m tcp --dport 443 -j DNAT --to-destination 192.168.1.254:443
+-A PREROUTING -i tailscale0 -p tcp -m tcp --dport 8006 -j DNAT --to-destination 192.168.1.254:8006
+-A PREROUTING -i tailscale0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 192.168.1.254:80
+-A PREROUTING -i tailscale0 -p tcp -m tcp --dport 4096 -j DNAT --to-destination 192.168.1.254:4096
+-A POSTROUTING -j ts-postrouting

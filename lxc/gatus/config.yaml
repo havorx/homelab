@@ -19,3 +19,11 @@ endpoints:
     interval: 120s
     conditions:
       - '[STATUS] == 200'
+
+  - name: OpenCode
+    group: services
+    url: http://10.0.0.9:4096/global/health
+    interval: 60s
+    conditions:
+      - '[STATUS] == 200'
+      - '[BODY].healthy == true'
