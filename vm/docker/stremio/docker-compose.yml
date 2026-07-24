@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     ports:
       - "11470:11470"
+      - "12470:12470"
     environment:
       - NO_CORS=1
       - CASTING_DISABLED=1
