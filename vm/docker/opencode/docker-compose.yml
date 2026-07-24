@@ -7,7 +7,7 @@ services:
     ports:
       - "4096:4096"
     volumes:
-      - /root/homelab:/workspace
+      - /opt/docker:/workspace
       - opencode-data:/root/.local/share/opencode
     working_dir: /workspace
     environment:

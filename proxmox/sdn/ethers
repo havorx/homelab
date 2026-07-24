@@ -1,7 +1,5 @@
-# SDN DHCP MAC→IP mappings (svcnet)
-# Serviced by dnsmasq in /etc/dnsmasq.d/svcnet/ethers
-
-BC:24:11:66:DB:A4,10.0.0.100 # AdGuard eth1 (LXC dns, static in container)
-BC:24:11:10:C1:F2,10.0.0.101 # Gatus eth0 (LXC monitor, DHCP)
-BC:24:11:DA:A4:50,10.0.0.102 # Caddy eth1 (LXC caddy, DHCP)
-BC:24:11:31:6E:1C,10.0.0.103 # Tailscale eth0 (LXC tailscale, DHCP)
+BC:24:11:66:DB:A4,10.0.0.100
+BC:24:11:10:C1:F2,10.0.0.101
+BC:24:11:DA:A4:50,10.0.0.102
+BC:24:11:31:6E:1C,10.0.0.103
+BC:24:11:F2:45:3E,10.0.0.9
