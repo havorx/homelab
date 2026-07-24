@@ -15,6 +15,7 @@ services:
       - agentmemory-data:/data
     environment:
       - AGENTMEMORY_TOOLS=all
+      - AGENTMEMORY_SECRET=3dd88e55481332e4b945c10aa0d938a96e5c94ea7da4b43f227a60161a3422ec
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3111/agentmemory/livez"]
       interval: 30s

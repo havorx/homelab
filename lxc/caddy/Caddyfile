@@ -91,3 +91,12 @@ https://100.67.156.34:11470 {
         }
     }
 }
+
+http://memory.home {
+    redir https://memory.home{uri} 302
+}
+
+https://memory.home {
+    tls internal
+    reverse_proxy 10.0.0.9:3111
+}

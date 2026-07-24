@@ -37,3 +37,11 @@ endpoints:
     interval: 60s
     conditions:
       - '[STATUS] == 200'
+
+  - name: AgentMemory
+    group: services
+    url: http://10.0.0.9:3111/agentmemory/livez
+    interval: 60s
+    conditions:
+      - '[STATUS] == 200'
+      - '[BODY].status == ok'
