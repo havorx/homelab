@@ -1,0 +1,21 @@
+services:
+  stremio:
+    image: stremio/server:latest
+    container_name: stremio
+    restart: unless-stopped
+    ports:
+      - "11470:11470"
+    environment:
+      - NO_CORS=1
+      - CASTING_DISABLED=1
+    volumes:
+      - stremio_data:/root/.stremio-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11470/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  stremio_data:
