@@ -10,6 +10,7 @@ services:
       - CASTING_DISABLED=1
     volumes:
       - stremio_data:/root/.stremio-server
+      - ./server-settings.json:/root/.stremio-server/server-settings.json:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11470/"]
       interval: 30s

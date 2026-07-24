@@ -1,0 +1,7 @@
+{
+    "cacheSize": 2147483648,
+    "remoteHttps": "https://100.67.156.34:11470",
+    "btMaxConnections": 200,
+    "transcodeConcurrency": 1,
+    "transcodeHardwareAccel": false
+}
