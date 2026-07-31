@@ -2,10 +2,8 @@ services:
   stremio:
     image: stremio/server:latest
     container_name: stremio
+    network_mode: host
     restart: unless-stopped
-    ports:
-      - "11470:11470"
-      - "12470:12470"
     environment:
       - NO_CORS=1
       - CASTING_DISABLED=1
