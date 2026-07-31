@@ -44,7 +44,7 @@ https://192.168.1.254 {
 
 https://100.67.156.34 {
     tls internal
-    reverse_proxy 10.0.0.101:8080
+    reverse_proxy 10.0.0.9:3000
 }
 
 https://100.67.156.34:8006 {

@@ -36,7 +36,6 @@
         href: https://stremio.home
         server: my-docker
         container: stremio
-        siteMonitor: http://10.0.0.9:11470
     - AgentMemory:
         icon: mdi-brain
         href: https://memory.home
