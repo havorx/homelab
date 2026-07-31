@@ -109,3 +109,12 @@ https://syncthing.home {
     tls internal
     reverse_proxy 10.0.0.104:8384
 }
+
+http://search.home {
+    redir https://search.home{uri} 302
+}
+
+https://search.home {
+    tls internal
+    reverse_proxy 10.0.0.9:8888
+}

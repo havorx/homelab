@@ -52,3 +52,10 @@ endpoints:
     interval: 60s
     conditions:
       - '[STATUS] == 200'
+
+  - name: SearXNG
+    group: services
+    url: http://10.0.0.9:8888/
+    interval: 60s
+    conditions:
+      - '[STATUS] == 200'
