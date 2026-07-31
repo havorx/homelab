@@ -1,0 +1,37 @@
+- Infrastructure:
+    - Proxmox:
+        icon: proxmox.png
+        href: https://proxmox.home
+    - AdGuard:
+        icon: adguard-home.png
+        href: https://adguard.home
+        siteMonitor: http://192.168.1.10:80
+    - Gatus:
+        icon: gatus.png
+        href: https://gatus.home
+        siteMonitor: http://10.0.0.101:8080
+    - Tailscale:
+        icon: tailscale.png
+        href: https://login.tailscale.com/admin
+
+- Services:
+    - Syncthing:
+        icon: syncthing.png
+        href: https://syncthing.home
+        siteMonitor: http://10.0.0.104:8384
+    - SearXNG:
+        icon: searxng.png
+        href: https://search.home
+        siteMonitor: http://10.0.0.9:8888
+    - OpenCode:
+        icon: mdi-code-json
+        href: https://opencode.home
+        siteMonitor: http://10.0.0.9:4096/global/health
+    - Stremio:
+        icon: stremio.png
+        href: https://stremio.home
+        siteMonitor: http://10.0.0.9:11470
+    - AgentMemory:
+        icon: mdi-brain
+        href: https://memory.home
+        siteMonitor: http://10.0.0.9:3111/agentmemory/livez

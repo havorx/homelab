@@ -118,3 +118,12 @@ https://search.home {
     tls internal
     reverse_proxy 10.0.0.9:8888
 }
+
+http://dashboard.home {
+    redir https://dashboard.home{uri} 302
+}
+
+https://dashboard.home {
+    tls internal
+    reverse_proxy 10.0.0.9:3000
+}
