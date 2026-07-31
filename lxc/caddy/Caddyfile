@@ -92,6 +92,15 @@ https://100.67.156.34:11470 {
     }
 }
 
+https://100.67.156.34:12470 {
+    tls internal
+    reverse_proxy https://10.0.0.9:12470 {
+        transport http {
+            tls_server_name 100-67-156-34.519b6502d940.stremio.rocks
+        }
+    }
+}
+
 http://memory.home {
     redir https://memory.home{uri} 302
 }
