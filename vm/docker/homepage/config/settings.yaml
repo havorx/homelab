@@ -1,1 +1,29 @@
 title: GL552JX Homelab
+language: en
+theme: dark
+color: zinc
+target: _self
+headerStyle: boxed
+statusStyle: "dot"
+hideVersion: true
+disableCollapse: true
+useEqualHeights: true
+favicon: https://raw.githubusercontent.com/walkxcode/dashboard-icons/refs/heads/main/png/homelab.png
+
+layout:
+  Gl552JX:
+    icon: mdi-server
+    Infrastructure:
+      style: column
+      tab: Gl552JX
+    Services:
+      style: column
+      tab: Gl552JX
+    Phone (Tailscale):
+      style: column
+      tab: Gl552JX
+  Monitoring:
+    icon: mdi-heart-pulse
+    Infrastructure:
+      style: column
+      tab: Monitoring

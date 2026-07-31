@@ -35,3 +35,20 @@
         icon: mdi-brain
         href: https://memory.home
         siteMonitor: http://10.0.0.9:3111/agentmemory/livez
+
+- Phone (Tailscale):
+    - Proxmox:
+        icon: proxmox.png
+        href: https://100.67.156.34:8006
+    - Gatus:
+        icon: gatus.png
+        href: https://100.67.156.34
+    - OpenCode:
+        icon: mdi-code-json
+        href: https://100.67.156.34:4096
+    - Stremio:
+        icon: stremio.png
+        href: https://100.67.156.34:11470
+    - Dashboard:
+        icon: mdi-cellphone
+        href: https://100.67.156.34:3000

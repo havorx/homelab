@@ -1,0 +1,334 @@
+/**
+ * iOS 26 Liquid Glass Theme for Homepage
+ * Adapted from kernyx64/LiquidGlass-Theme-for-Homepage (794 pts on r/homelab)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', Consolas, Monaco, monospace;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.11);
+  --glass-border-hover: rgba(255, 255, 255, 0.15);
+  --text-primary: rgba(255, 255, 255, 1);
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --blur: 20px;
+  --radius: 20px;
+  --radius-sm: 16px;
+  --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Global Styles */
+body { overflow-x: hidden; min-height: 100vh; position: relative; }
+body::before { content: ''; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: -2; }
+* { font-family: var(--font-primary) !important; font-weight: 500; -webkit-font-smoothing: antialiased; }
+.widget-stat-value, .text-xs, .ping-status { font-family: var(--font-mono) !important; font-weight: 600; }
+
+/* Glass Base */
+.service-card,
+button[id$='-tab'],
+.widget,
+.widget-stat,
+.bg-theme-200\/50,
+.flex-1.service-block,
+.flex.flex-col.mt-3.bookmark-list {
+  backdrop-filter: blur(var(--blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(150%);
+  transition: var(--transition);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Navigation Tabs */
+#myTab { padding: 16px; display: flex; justify-content: center; gap: 8px; }
+button[id$='-tab'] {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 15px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+button[id$='-tab']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+button[id$='-tab']:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+button[id$='-tab']:hover::before { left: 100%; }
+
+button[id$='-tab'][aria-selected="true"] {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Header */
+.information-widget-logo img {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 15px rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+}
+
+.information-widget-logo img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2), 0 0 25px rgba(255, 255, 255, 0.15);
+}
+
+.information-widget-logo + .information-widget-greeting span {
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  font-size: 28px !important;
+  letter-spacing: -0.8px;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Service Cards */
+.service-card {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+  border-radius: var(--radius) var(--radius) 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.service-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.service-card:hover {
+  background: var(--glass-hover) !important;
+  border-color: var(--glass-border-hover) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+.service-card:hover::after { left: 100%; }
+.service-card * { position: relative; z-index: 3; }
+
+/* Internal Blocks */
+.bg-theme-200\/50,
+.flex-1.service-block {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.service-card:hover [class*="bg-theme-200/50"],
+.service-card:hover .flex-1.service-block {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Widgets */
+.widget {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.widget:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.widget-stats {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)) !important;
+  gap: 8px !important;
+  margin-top: 8px !important;
+}
+
+.widget-stat {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: var(--radius-sm) !important;
+  text-align: center !important;
+  padding: 8px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.widget-stat:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.02);
+}
+
+.widget-stat-value {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.widget-stat-label {
+  font-size: 11px !important;
+  color: var(--text-secondary) !important;
+  margin-top: 4px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Status Dots */
+.status-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  margin-left: auto !important;
+  margin-right: 12px !important;
+  flex-shrink: 0 !important;
+  position: relative;
+}
+
+.status-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.3;
+  filter: blur(4px);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.ping-up { background-color: #30d158; box-shadow: 0 0 8px #30d158; }
+.ping-down { background-color: #ff453a; box-shadow: 0 0 8px #ff453a; }
+.ping-warning { background-color: #ffd60a; box-shadow: 0 0 8px #ffd60a; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+/* Typography */
+.service-title {
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  font-size: 16px !important;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.service-description {
+  color: var(--text-secondary) !important;
+  font-size: 13px !important;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.text-sm {
+  white-space: pre-line;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Bookmarks */
+.flex.flex-col.mt-3.bookmark-list {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 16px 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.bookmark-icon {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; backdrop-filter: blur(8px); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+
+/* Overrides */
+.p-1 { padding: 0.5rem !important; }
+.bg-theme-100\/20 { background-color: transparent !important; }
+
+/* Service card outer wrapper fix */
+.services > div {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Animations */
+@media (prefers-reduced-motion: no-preference) {
+  .service-card, .widget, button[id$='-tab'] { animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards; }
+  .service-card:nth-child(1) { animation-delay: 0.1s; }
+  .service-card:nth-child(2) { animation-delay: 0.15s; }
+  .service-card:nth-child(3) { animation-delay: 0.2s; }
+  .service-card:nth-child(4) { animation-delay: 0.25s; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  :root { --blur: 16px; }
+}
+
+@media (max-width: 768px) {
+  .service-card { min-height: 80px !important; }
+  .service-title { font-size: 17px !important; }
+  .service-description { font-size: 14px !important; }
+  button[id$='-tab'] { padding: 8px 24px; font-size: 14px; }
+  :root { --blur: 12px; }
+}
+
+/* Utilities */
+[data-name^="_hidden"] .service-title, .bookmark-group .bookmark-group-name, #footer { display: none; }
